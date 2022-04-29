@@ -1,19 +1,33 @@
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express from 'express';
-import mongoose from 'mongoose';
+import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import postsRouter from "./routes/posts.js";
+dotenv.config();
 
 const app = express();
-app.use(bodyParser.json({limit: "30mb", extended: true}));
-app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
+app.use("/posts", postsRouter);
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-const CONNECTION_URL = 'mongodb+srv://Social-Media-MERN-Project:social-media-mern-project@cluster0.cvjtt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pu4qt.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+//mongoose connection
+await mongoose.connect(DB_URL, options, (err) => {
+  if (!err) {
+    console.log("Database Conected...");
+  } else {
+    console.log("Error in DB connection : " + err);
+  }
+});
 
-mongoose.connect(CONNECTION_URL, {useNewUrlParser: true, useUnifiedTopology: true})
-.then(() => app.listen(PORT, () => console.log(`server running on port: ${PORT}`)))
-.catch((error) => console.log(error.message))
-
-// mongoose.set(`useFindAndModify`, false);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on PORT: ${PORT}`);
+});
