@@ -20,6 +20,9 @@ const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+app.get("/", (req, res) => {
+  res.send("Post Sharer API");
+});
 //mongoose connection
 await mongoose.connect(DB_URL, options, (err) => {
   if (!err) {
