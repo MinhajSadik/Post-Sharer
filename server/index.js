@@ -7,19 +7,20 @@ import postsRouter from "./routes/posts.js";
 dotenv.config();
 
 const app = express();
-app.use("/posts", postsRouter);
-
+app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
 
 const DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pu4qt.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+
+app.use("/posts", postsRouter);
+
 app.get("/", (req, res) => {
   res.send("Post Sharer API");
 });
