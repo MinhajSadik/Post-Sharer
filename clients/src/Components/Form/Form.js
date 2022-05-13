@@ -1,12 +1,19 @@
 import { Button, Paper, TextField, Typography } from "@material-ui/core";
-import React from "react";
-import { useDispatch } from "react-redux";
-import { createPost } from "../../api";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, updatePost } from "../../actions/posts";
 import useStyles from "./styles";
 
-export default function Form() {
+export default function Form({ currentId, setCurrentId }) {
   const dispatch = useDispatch();
-
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
+  useEffect(() => {
+    if (post) {
+      setPostData(post);
+    }
+  }, [post]);
   const initialState = {
     title: "",
     content: "",
@@ -18,7 +25,11 @@ export default function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+    if (currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
   };
 
   return (
@@ -29,7 +40,9 @@ export default function Form() {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Share a Post</Typography>
+        <Typography variant="h6">
+          {currentId ? "edit" : "Create"} a post
+        </Typography>
         <TextField
           name="title"
           variant="outlined"
@@ -76,6 +89,7 @@ export default function Form() {
           size="large"
           type="submit"
           fullWidth
+          required={true}
         >
           Submit
         </Button>

@@ -1,9 +1,11 @@
-import { Card, CardMedia, Typography } from "@material-ui/core";
+import { Button, Card, CardMedia, Typography } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+// import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
 import React from "react";
 import useStyles from "./styles";
 
-export default function Post({ post }) {
+export default function Post({ post, setCurrentId }) {
   // const dispatch = useDispatch();
   const classes = useStyles();
   return (
@@ -23,6 +25,24 @@ export default function Post({ post }) {
         </Typography>
       </div>
 
+      <div className={classes.overlay2}>
+        <Button
+          style={{ color: "white" }}
+          size="small"
+          onClick={() => setCurrentId(post._id)}
+        >
+          Edit
+          {/* <MoreHorizIcon fontSize="default" /> */}
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          // onClick={() => dispatch(deletePost(post._id))}
+        >
+          <DeleteIcon fontSize="small" />
+        </Button>
+      </div>
+
       <Typography
         className={classes.title}
         gutterBottom
@@ -31,14 +51,19 @@ export default function Post({ post }) {
       >
         {post.title}
       </Typography>
-      <Typography variant="body2" color="textSecondary" component="p">
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        component="p"
+        className={classes.title}
+      >
         {post.content}
       </Typography>
       <Typography
         className={classes.title}
         gutterBottom
-        variant="h5"
-        component="h2"
+        variant="caption"
+        component="caption"
       >
         {post.date || post.createdAt}
       </Typography>
